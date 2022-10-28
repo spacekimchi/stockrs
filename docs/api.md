@@ -9,6 +9,10 @@
 
 required params: [symbols: ticker of company]
 response object: "quoteResponse"
+result will have an array of information of symbols in query params
+
+successfull call json will be in response.body["quoteResponse"]["result"]
+errors can be found in response.body["quoteResponse"]["error"]
 
 Example call: 
 ```
@@ -54,6 +58,10 @@ Object {
                 "marketCap": Number(353272659968),
                 "marketState": String("PRE"),
                 "messageBoardId": String("finmb_6160262"),
+                "postMarketChange": Number(-3.2700195),
+                "postMarketChangePercent": Number(-0.86057675),
+                "postMarketPrice": Number(376.71),
+                "postMarketTime": Number(1666904492),
                 "preMarketChange": Number(-2.100006),
                 "preMarketChangePercent": Number(-0.5455695),
                 "preMarketPrice": Number(382.82),
@@ -95,6 +103,96 @@ Object {
 }
 ```
 
+For aapl in market hours:
+
+```
+
+"quoteResponse": Object {
+    "error": Null,
+    "result": Array [
+        Object {
+            "ask": Number(143.4),
+            "askSize": Number(10),
+            "averageAnalystRating": String("1.9 - Buy"),
+            "averageDailyVolume10Day": Number(83777730),
+            "averageDailyVolume3Month": Number(82400950),
+            "bid": Number(144.87),
+            "bidSize": Number(8),
+            "bookValue": Number(3.61),
+            "cryptoTradeable": Bool(false),
+            "currency": String("USD"),
+            "customPriceAlertConfidence": String("HIGH"),
+            "displayName": String("Apple"),
+            "dividendDate": Number(1660176000),
+            "earningsTimestamp": Number(1666900800),
+            "earningsTimestampEnd": Number(1666900800),
+            "earningsTimestampStart": Number(1666900800),
+            "epsCurrentYear": Number(6.08),
+            "epsForward": Number(6.43),
+            "epsTrailingTwelveMonths": Number(6.05),
+            "esgPopulated": Bool(false),
+            "exchange": String("NMS"),
+            "exchangeDataDelayedBy": Number(0),
+            "exchangeTimezoneName": String("America/New_York"),
+            "exchangeTimezoneShortName": String("EDT"),
+            "fiftyDayAverage": Number(152.7634),
+            "fiftyDayAverageChange": Number(-7.963394),
+            "fiftyDayAverageChangePercent": Number(-0.05212894),
+            "fiftyTwoWeekHigh": Number(182.94),
+            "fiftyTwoWeekHighChange": Number(-38.14),
+            "fiftyTwoWeekHighChangePercent": Number(-0.20848365),
+            "fiftyTwoWeekLow": Number(129.04),
+            "fiftyTwoWeekLowChange": Number(15.76001),
+            "fiftyTwoWeekLowChangePercent": Number(0.122132756),
+            "fiftyTwoWeekRange": String("129.04 - 182.94"),
+            "financialCurrency": String("USD"),
+            "firstTradeDateMilliseconds": Number(345479400000),
+            "forwardPE": Number(22.519442),
+            "fullExchangeName": String("NasdaqGS"),
+            "gmtOffSetMilliseconds": Number(-14400000),
+            "language": String("en-US"),
+            "longName": String("Apple Inc."),
+            "market": String("us_market"),
+            "marketCap": Number(2327052025856),
+            "marketState": String("POST"),
+            "messageBoardId": String("finmb_24937"),
+            "postMarketChange": Number(-1.800003),
+            "postMarketChangePercent": Number(-1.243096),
+            "postMarketPrice": Number(143.0),
+            "postMarketTime": Number(1666903189),
+            "priceEpsCurrentYear": Number(23.81579),
+            "priceHint": Number(2),
+            "priceToBook": Number(40.110806),
+            "quoteSourceName": String("Nasdaq Real Time Price"),
+            "quoteType": String("EQUITY"),
+            "region": String("US"),
+            "regularMarketChange": Number(-4.550003),
+            "regularMarketChangePercent": Number(-3.046537),
+            "regularMarketDayHigh": Number(149.04),
+            "regularMarketDayLow": Number(144.13),
+            "regularMarketDayRange": String("144.13 - 149.04"),
+            "regularMarketOpen": Number(148.07),
+            "regularMarketPreviousClose": Number(149.35),
+            "regularMarketPrice": Number(144.8),
+            "regularMarketTime": Number(1666900804),
+            "regularMarketVolume": Number(85651510),
+            "sharesOutstanding": Number(16070800384),
+            "shortName": String("Apple Inc."),
+            "sourceInterval": Number(15),
+            "symbol": String("AAPL"),
+            "tradeable": Bool(false),
+            "trailingAnnualDividendRate": Number(0.89),
+            "trailingAnnualDividendYield": Number(0.005959156),
+            "trailingPE": Number(23.933884),
+            "triggerable": Bool(true),
+            "twoHundredDayAverage": Number(156.99306),
+            "twoHundredDayAverageChange": Number(-12.193054),
+            "twoHundredDayAverageChangePercent": Number(-0.0776662),
+            "typeDisp": String("Equity"),
+        },
+    ],
+},
+```
 
 2. **Quote Summary**
 
