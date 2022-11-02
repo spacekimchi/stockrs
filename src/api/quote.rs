@@ -25,7 +25,7 @@ pub struct Quote {
     fifty_two_week_low_change_percent: f64,
     fifty_two_week_range: String, /* String("348.11 - 479.98"), */
     full_exchange_name: String, /* String("NYSEArca") */
-    long_name: String, /* String("SPDR S&P 500 ETF Trust"), */
+    pub long_name: String, /* String("SPDR S&P 500 ETF Trust"), */
     short_name: String, /* String("SPDR S&P 500"), */
     market: String, /* String("us_market"), */
     market_cap: u64,
