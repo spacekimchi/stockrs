@@ -16,6 +16,8 @@ use crossterm::{
     execute,
 };
 
+type Term = tui::Terminal<tui::backend::CrosstermBackend<std::io::Stdout>>;
+
 fn main() {
     if let Err(e) = enable_raw_mode() {
         eprintln!("enable_raw_mode error {e}");
@@ -33,12 +35,13 @@ fn main() {
     });
     if let Err(e) = stockrs::run(&mut terminal) {
         eprintln!("Application error: {e}");
+        return_my_terminal(&mut terminal);
         process::exit(1);
     }
-    if let Err(e) = disable_raw_mode() {
-        eprintln!("disable_raw_mode error {e}");
-        process::exit(1);
-    }
+    return_my_terminal(&mut terminal);
+}
+
+fn return_my_terminal(terminal: &mut Term) {
     if let Err(e) = execute!(
         terminal.backend_mut(),
         LeaveAlternateScreen,
@@ -47,10 +50,14 @@ fn main() {
         eprintln!("execute error {e}");
         process::exit(1);
     };
+    if let Err(e) = disable_raw_mode() {
+        eprintln!("disable_raw_mode error {e}");
+        process::exit(1);
+    }
     if let Err(e) = terminal.show_cursor() {
         eprintln!("terminal.show_cursor error {e}");
         process::exit(1);
     }
-    
+
 }
 

@@ -24,7 +24,6 @@ pub async fn run(
     terminal: &mut Term
 ) -> Result<(), Box<dyn std::error::Error>> 
 {
-    /*
     let query = vec![
         ("formatted", "false"),
         ("lang", "en-US"),
@@ -32,10 +31,12 @@ pub async fn run(
         ("corsDomain", "finance.yahoo.com"),
         ("symbols", "spy")
     ];
-    */
-    // let body = api::quote::Response::get(&["spy"], &query).await?;
-    // println!("body: {}", body.response.result.unwrap().first().unwrap().long_name);
+    let body = api::quote::Response::get(&["spy", "tsla", "aapl"], &query).await?;
     let mut app = app::App::new();
+    let quotes = body.response.result.unwrap_or_default();
+    for quote in &quotes {
+        app.tickers.push(&quote);
+    }
     loop {
         draw_term1(terminal, &mut app)?;
         if crossterm::event::poll(Duration::from_secs(1))? {
@@ -52,8 +53,6 @@ pub async fn run(
             }
         }
     }
-
-    //std::thread::sleep(std::time::Duration::from_millis(5000));
 
     Ok(())
 }
@@ -108,24 +107,23 @@ where
     rect.render_widget(block, chunkss[1]);
 }
 
-fn ui<B: Backend>(f: &mut Frame<B>, app: &app::App) {
+fn ui<B: Backend>(f: &mut Frame<B>, app: &mut app::App) {
     let size = f.size();
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(5)
-        .constraints([Constraint::Length(3), Constraint::Min(0)].as_ref())
+        .constraints([
+            Constraint::Length(3),  /* tabs */
+            Constraint::Min(0),     /* main content */
+        ].as_ref())
         .split(size);
 
-    let block = Block::default().style(Style::default().fg(Color::Green));
-    f.render_widget(block, size);
     let titles = app
-        .titles
+        .tickers
         .iter()
         .map(|t| {
-            let (first, rest) = t.split_at(1);
             Spans::from(vec![
-                Span::styled(first, Style::default().fg(Color::Yellow)),
-                Span::styled(rest, Style::default().fg(Color::Green)),
+                Span::styled(&t.symbol, Style::default().fg(Color::Gray))
             ])
         })
     .collect();
@@ -136,17 +134,17 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &app::App) {
         .highlight_style(
             Style::default()
             .add_modifier(Modifier::BOLD)
-            .bg(Color::Black),
+            .bg(Color::Black)
+            .fg(Color::Green),
         );
     f.render_widget(tabs, chunks[0]);
     let inner = match app.index {
-        0 => Block::default().style(Style::default().fg(Color::Red)).title("Inner 0").borders(Borders::ALL),
-        1 => Block::default().style(Style::default().fg(Color::LightBlue)).title("Inner 1").borders(Borders::ALL),
-        2 => Block::default().style(Style::default().fg(Color::Magenta)).title("Inner 2").borders(Borders::ALL),
-        3 => Block::default().style(Style::default().fg(Color::Cyan)).title("Inner 3").borders(Borders::ALL),
-        _ => unreachable!(),
+        0 => draw_main_container(f, app, chunks[1]),
+        1 => draw_main_container(f, app, chunks[1]),
+        2 => draw_main_container(f, app, chunks[1]),
+        //3 => Block::default().style(Style::default().fg(Color::Cyan)).title("Inner 3").borders(Borders::ALL),
+        _ => {},
     };
-    f.render_widget(inner, chunks[1]);
 }
 
 
@@ -162,9 +160,84 @@ fn draw_term1(
     Ok(())
 }
 
-fn draw_tab_2<B: Backend>(f: &mut Frame<B>, app: &mut app::App, area: Rect) 
+fn draw_main_container<B: Backend>(f: &mut Frame<B>, app: &mut app::App, area: Rect) 
 where
     B: Backend,
 {
-    let chunks = Block::default();
+    let chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(
+            [
+            Constraint::Min(0),
+            ].as_ref()
+        )
+        .split(area);
+    let block = Block::default().style(Style::default().fg(Color::Cyan)).title(&*app.tickers[app.index].long_name).borders(Borders::ALL);
+    f.render_widget(block, area);
+    draw_main_content(f, app, chunks[0]);
+}
+
+fn draw_main_content<B: Backend>(f: &mut Frame<B>, app: &mut app::App, area: Rect) 
+where
+    B: Backend,
+{
+    let chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .margin(1)
+        .constraints(
+            [
+            Constraint::Max(10),
+            Constraint::Min(0),
+            ].as_ref()
+        )
+        .split(area);
+    
+    draw_top_bar(f, app, chunks[0]);
+    let block = Block::default()
+        .style(Style::default().fg(Color::Cyan))
+        .title("inner 2")
+        .borders(Borders::ALL);
+    f.render_widget(block, chunks[1]);
+}
+
+fn draw_top_bar<B: Backend>(f: &mut Frame<B>, app: &mut app::App, area: Rect) 
+where
+    B: Backend,
+{
+    let chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .margin(1)
+        .constraints(
+            [
+            Constraint::Min(15),
+            Constraint::Max(22),
+            ].as_ref()
+        )
+        .split(area);
+    let block = Block::default()
+        .title("main_top_bar[0]")
+        .borders(Borders::RIGHT)
+        .border_style(Style::default().fg(Color::LightMagenta))
+        .border_type(BorderType::Plain);
+    f.render_widget(block, chunks[0]);
+    draw_top_bar_legend(f, app, chunks[1]);
+}
+
+fn draw_top_bar_legend<B: Backend>(f: &mut Frame<B>, app: &mut app::App, area: Rect) 
+where
+    B: Backend,
+{
+    let chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .margin(2)
+        .constraints([
+            Constraint::Length(18),
+        ].as_ref())
+        .split(area);
+    let block = Block::default()
+        .title("main_top_bar[1]")
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(Color::LightMagenta))
+        .border_type(BorderType::Plain);
+    f.render_widget(block, chunks[0]);
 }
