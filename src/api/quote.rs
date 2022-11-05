@@ -3,67 +3,67 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Quote {
-    ask: f64,
-    ask_size: u32,
-    bid: f64,
-    bid_size: u32,
-    currency: String,
-    average_daily_volume_10_day: u64,
-    average_daily_volume_3_month: u64,
-    exchange_data_delayed_by: u32,
-    exchange_timezone_name: String, /* String("America/New_York"), */
-    exchange_timezone_short_name: String, /* String("EDT"), */
-    eps_trailing_twelve_months: f64,
-    fifty_day_average: f64,
-    fifty_day_average_change: f64,
-    fifty_day_average_change_percent: f64,
-    fifty_two_week_high: f64,
-    fifty_two_week_high_change: f64,
-    fifty_two_week_high_change_percent: f64,
-    fifty_two_week_low: f64,
-    fifty_two_week_low_change: f64,
-    fifty_two_week_low_change_percent: f64,
-    fifty_two_week_range: String, /* String("348.11 - 479.98"), */
-    full_exchange_name: String, /* String("NYSEArca") */
-    long_name: String, /* String("SPDR S&P 500 ETF Trust"), */
-    short_name: String, /* String("SPDR S&P 500"), */
-    market: String, /* String("us_market"), */
-    market_cap: u64,
-    market_state: String, /* String("PRE"), */
-    post_market_change: f64,
-    post_market_change_percent: f64,
-    post_market_price: f64,
-    post_market_time: u64,
-    pre_market_change: f64,
-    pre_market_change_percent: f64,
-    pre_market_price: f64,
-    pre_market_time: u64,
-    quote_source_name: String, /* String("Nasdaq Real Time Price"), */
-    quote_type: String, /* String("ETF"), */
-    region: String, /* String("US"), */
-    regular_market_change: f64,
-    regular_market_change_percent: f64,
-    regular_market_day_high: f64,
-    regular_market_day_low: f64,
-    regular_market_day_range: String, /* String("378.671 - 385.25"), */
-    regular_market_open: f64,
-    regular_market_previous_close: f64,
-    regular_market_price: f64,
-    regular_market_time: u64,
-    regular_market_volume: u64,
-    shares_outstanding: u64,
-    source_interval: u32, /* default 15 */
-    symbol: String, /* String("SPY"), */
-    trailing_annual_dividend_rate: f64,
-    trailing_annual_dividend_yield: f64,
-    trailing_p_e: f64,
-    trailing_three_month_nav_returns: f64,
-    trailing_three_month_returns: f64,
-    two_hundred_day_average: f64,
-    two_hundred_day_average_change: f64,
-    two_hundred_day_average_change_percent: f64,
-    type_disp: String, /* String("ETF"), */
-    ytd_return: f64,
+    pub ask: f64,
+    pub ask_size: u32,
+    pub bid: f64,
+    pub bid_size: u32,
+    pub currency: String,
+    pub average_daily_volume_10_day: u64,
+    pub average_daily_volume_3_month: u64,
+    pub exchange_data_delayed_by: u32,
+    pub exchange_timezone_name: String, /* String("America/New_York"), */
+    pub exchange_timezone_short_name: String, /* String("EDT"), */
+    pub eps_trailing_twelve_months: f64,
+    pub fifty_day_average: f64,
+    pub fifty_day_average_change: f64,
+    pub fifty_day_average_change_percent: f64,
+    pub fifty_two_week_high: f64,
+    pub fifty_two_week_high_change: f64,
+    pub fifty_two_week_high_change_percent: f64,
+    pub fifty_two_week_low: f64,
+    pub fifty_two_week_low_change: f64,
+    pub fifty_two_week_low_change_percent: f64,
+    pub fifty_two_week_range: String, /* String("348.11 - 479.98"), */
+    pub full_exchange_name: String, /* String("NYSEArca") */
+    pub long_name: String, /* String("SPDR S&P 500 ETF Trust"), */
+    pub short_name: String, /* String("SPDR S&P 500"), */
+    pub market: String, /* String("us_market"), */
+    pub market_cap: u64,
+    pub market_state: String, /* String("PRE"), */
+    pub post_market_change: f64,
+    pub post_market_change_percent: f64,
+    pub post_market_price: f64,
+    pub post_market_time: u64,
+    pub pre_market_change: f64,
+    pub pre_market_change_percent: f64,
+    pub pre_market_price: f64,
+    pub pre_market_time: u64,
+    pub quote_source_name: String, /* String("Nasdaq Real Time Price"), */
+    pub quote_type: String, /* String("ETF"), */
+    pub region: String, /* String("US"), */
+    pub regular_market_change: f64,
+    pub regular_market_change_percent: f64,
+    pub regular_market_day_high: f64,
+    pub regular_market_day_low: f64,
+    pub regular_market_day_range: String, /* String("378.671 - 385.25"), */
+    pub regular_market_open: f64,
+    pub regular_market_previous_close: f64,
+    pub regular_market_price: f64,
+    pub regular_market_time: u64,
+    pub regular_market_volume: u64,
+    pub shares_outstanding: u64,
+    pub source_interval: u32, /* default 15 */
+    pub symbol: String, /* String("SPY"), */
+    pub trailing_annual_dividend_rate: f64,
+    pub trailing_annual_dividend_yield: f64,
+    pub trailing_p_e: f64,
+    pub trailing_three_month_nav_returns: f64,
+    pub trailing_three_month_returns: f64,
+    pub two_hundred_day_average: f64,
+    pub two_hundred_day_average_change: f64,
+    pub two_hundred_day_average_change_percent: f64,
+    pub type_disp: String, /* String("ETF"), */
+    pub ytd_return: f64,
 }
 
 impl Default for Quote {
@@ -142,15 +142,35 @@ pub struct Response {
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(default)]
 pub struct QuoteResponse {
     pub error: Option<ResponseError>,
     pub result: Option<Vec<Quote>>,
 }
 
+impl Default for QuoteResponse {
+    fn default() -> Self {
+        Self {
+            error: Some(ResponseError::default()),
+            result: Some(vec![]),
+        }
+    }
+}
+
 #[derive(Deserialize, Debug)]
+#[serde(default)]
 pub struct ResponseError {
-    pub code: Option<String>,
-    pub description: Option<String>,
+    pub code: String,
+    pub description: String,
+}
+
+impl Default for ResponseError {
+    fn default() -> Self {
+        Self {
+            code: "".to_string(),
+            description: "".to_string(),
+        }
+    }
 }
 
 impl Response {
@@ -163,9 +183,7 @@ impl Response {
                     |a, &b|
                     { format!("{}&{}={}", a, b.0, b.1) }
                 )
-            )
-        )
-        .await?;
+            )).await?;
         /*
          *  println!("Status: {}", response.status());
          *  println!("Headers:\n{:#?}", response.headers());
