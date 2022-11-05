@@ -61,14 +61,6 @@ fn draw<B>(rect: &mut Frame<B>)
 where
     B: Backend,
 {
-    /*
-     * full screen block with title "Block" in the top left
-     let size = f.size();
-     let block = Block::default()
-     .title("Block")
-     .borders(Borders::ALL);
-     f.render_widget(block, size);
-     */
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(1)
@@ -142,7 +134,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut app::App) {
         0 => draw_main_container(f, app, chunks[1]),
         1 => draw_main_container(f, app, chunks[1]),
         2 => draw_main_container(f, app, chunks[1]),
-        //3 => Block::default().style(Style::default().fg(Color::Cyan)).title("Inner 3").borders(Borders::ALL),
         _ => {},
     };
 }
@@ -154,7 +145,6 @@ fn draw_term1(
 ) -> Result<(), Box<dyn std::error::Error>> {
 
     terminal.draw(|f| {
-        //draw(f);
         ui(f, app);
     })?;
     Ok(())
@@ -183,21 +173,29 @@ where
 {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .margin(1)
+        .vertical_margin(1)
+        .horizontal_margin(3)
         .constraints(
             [
-            Constraint::Max(10),
+            Constraint::Length(10),
             Constraint::Min(0),
             ].as_ref()
         )
         .split(area);
     
     draw_top_bar(f, app, chunks[0]);
+    let chunkss = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(
+            [
+            Constraint::Min(0),
+            ].as_ref()
+        )
+        .split(chunks[1]);
     let block = Block::default()
         .style(Style::default().fg(Color::Cyan))
-        .title("inner 2")
-        .borders(Borders::ALL);
-    f.render_widget(block, chunks[1]);
+        .borders(Borders::BOTTOM | Borders::TOP);
+    f.render_widget(block, chunkss[0]);
 }
 
 fn draw_top_bar<B: Backend>(f: &mut Frame<B>, app: &mut app::App, area: Rect) 
@@ -206,19 +204,14 @@ where
 {
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
-        .margin(1)
         .constraints(
             [
-            Constraint::Min(15),
-            Constraint::Max(22),
+            Constraint::Min(22),
+            Constraint::Length(45),
             ].as_ref()
         )
         .split(area);
-    let block = Block::default()
-        .title("main_top_bar[0]")
-        .borders(Borders::RIGHT)
-        .border_style(Style::default().fg(Color::LightMagenta))
-        .border_type(BorderType::Plain);
+    let block = Block::default().style(Style::default().fg(Color::Cyan)).title("inner top left").borders(Borders::ALL);
     f.render_widget(block, chunks[0]);
     draw_top_bar_legend(f, app, chunks[1]);
 }
@@ -227,17 +220,6 @@ fn draw_top_bar_legend<B: Backend>(f: &mut Frame<B>, app: &mut app::App, area: R
 where
     B: Backend,
 {
-    let chunks = Layout::default()
-        .direction(Direction::Horizontal)
-        .margin(2)
-        .constraints([
-            Constraint::Length(18),
-        ].as_ref())
-        .split(area);
-    let block = Block::default()
-        .title("main_top_bar[1]")
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(Color::LightMagenta))
-        .border_type(BorderType::Plain);
-    f.render_widget(block, chunks[0]);
+    let block = Block::default().style(Style::default().fg(Color::Cyan)).title("inner top right").borders(Borders::ALL);
+    f.render_widget(block, area);
 }
